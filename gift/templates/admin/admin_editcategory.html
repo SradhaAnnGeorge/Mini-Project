@@ -1,0 +1,98 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  /* Style for the form container */
+  .container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* Style for the form fields and labels */
+  .form-group label {
+    font-weight: bold;
+  }
+
+  /* Style for the Save and Cancel buttons */
+  .btn-success {
+    background-color: #5bc0de;
+    color: #fff;
+  }
+
+  .btn-success:hover {
+    background-color: #31b0d5;
+  }
+
+  .btn-default {
+    background-color: #f5f5f5;
+    color: #333;
+  }
+
+  .btn-default:hover {
+    background-color: #e5e5e5;
+  }
+</style>
+
+<div class="container" style="position:relative; top:50px;" >
+  <h2>Edit Category</h2>
+  <form method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+    {% csrf_token %}
+    <div class="form-group">
+      <input type="text" id="id_name" name="name" class="form-control" placeholder="Category Name">
+      <span id="nameError" style="color: red;"></span>
+  </div>
+    <button href="{% url 'admin_category' %}" type="submit" class="btn btn-primary">Update Category</button>
+</div>
+</form>-
+
+<script>
+  var uniqueNames = new Set(); // To store unique category names
+
+  // Populate uniqueNames with existing category names (if applicable)
+  // {% for category in existing_categories %}
+  //     uniqueNames.add('{{ category.name }}');
+  // {% endfor %}
+
+  function validateName() {
+      var nameField = document.getElementById("id_name");
+      var nameValue = nameField.value.trim();
+      var nameError = document.getElementById("nameError");
+
+      // Use a regular expression to validate the name
+      var regex = /^[A-Z][a-z]* [A-Z][a-z]*$/;
+
+      if (!regex.test(nameValue)) {
+          nameError.textContent = "Category name should have two words with the first letter of each word capitalized, and no numbers.";
+      } else if (uniqueNames.has(nameValue)) {
+          nameError.textContent = "Category name is already in use.";
+      } else {
+          nameError.textContent = "";
+      }
+  }
+
+  function validateForm() {
+      var nameField = document.getElementById("id_name");
+      var nameValue = nameField.value.trim();
+      var nameError = document.getElementById("nameError");
+
+      // Use the same regular expression for form submission validation
+      var regex = /^[A-Z][a-z]* [A-Z][a-z]*$/;
+
+      if (!regex.test(nameValue)) {
+          nameError.textContent = "Category name should have two words with the first letter of each word capitalized, and no numbers.";
+          nameField.focus();
+          return false; // Prevent form submission
+      } else if (uniqueNames.has(nameValue)) {
+          nameError.textContent = "Category name is already in use.";
+          return false; // Prevent form submission
+      } else {
+          nameError.textContent = ""; // Clear any previous error message
+          uniqueNames.add(nameValue); // Add the name to the set of unique names
+          return true; // Allow form submission
+      }
+  }
+</script>
+
+{% endblock content %}
