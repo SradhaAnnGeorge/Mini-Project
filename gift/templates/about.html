@@ -71,7 +71,7 @@
                             <a class="text-white" data-bs-target="#menu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="menu"><i class="bi cp bi-list float-end fs-1 dmji"></i></a>
                         </h6>
                         <ul id="menu" class="navcol fw-bold d-none d-md-inline-flex">
-                            <li class="p-21 px-4">
+                            <!-- <li class="p-21 px-4">
                                 <a class="text-white" href="">Products<i class="bi pt-2 bi-chevron-down"></i></a>
                                 <div class="inner-div">
                                     <ul class="">
@@ -86,16 +86,16 @@
                                         <li><a href="">Personalized Gifts</a></li>
                                     </ul>
                                 </div>
-                            </li>
+                            </li> -->
                             <li class="p-21 px-4">
                                 <a class="text-white" href="">Categories<i class="bi pt-2 bi-chevron-down"></i></a>
                                 <div class="inner-div">
                                     <ul class="">
-                                        <li><a href="">Birthday Gifts</a></li>
-                                        <li><a href="">Anniversary Gifts</a></li>
-                                        <li><a href="">Special Occasions Gifts</a></li>
-                                        <li><a href="">Festive Special Gifts</a></li>
-                                        <li><a href="">Customized Gifts</a></li>
+                                        <li><a href="{% url 'products_list' category_id=8 %}">Birthday Gifts</a></li>
+                                        <li><a href="{% url 'products_list' category_id=4 %}">Anniversary Gifts</a></li>
+                                        <li><a href="{% url 'products_list' category_id=7 %}">Special Occasion</a></li>
+                                        <li><a href="{% url 'products_list' category_id=3 %}">Festive Special Gifts</a></li>
+                                        <li><a href="{% url 'products_list' category_id=5 %}">Customized Gifts</a></li>
                                     </ul>
                                 </div>
 

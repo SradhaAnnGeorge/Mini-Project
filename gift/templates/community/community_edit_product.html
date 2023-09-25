@@ -117,17 +117,17 @@
         }
     }
 
-    // Function to validate the product price
     function validateProductPrice() {
-        const productPrice = document.getElementById("id_price").value;
-        const priceErrorId = "priceError";  
+    const productPrice = document.getElementById("id_price").value;
+    const priceErrorId = "priceError";  
 
-        if (isNaN(productPrice) || parseInt(productPrice) <=  0) {
-            displayError(priceErrorId, "Product price should be a positive integer greater than zero.");
-        } else {
-            clearError(priceErrorId);
-        }
+    if (isNaN(productPrice) || parseInt(productPrice) < 200) {
+        displayError(priceErrorId, "Product price should be a positive integer of 200 or more.");
+    } else {
+        clearError(priceErrorId);
     }
+}
+
 
     // Function to validate the product image extension
     function validateProductImage() {

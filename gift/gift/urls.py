@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
-from giftapp.views import index, register, cart,about, detail, contact, userprofile,communityprofile, login_page,register,loggout,admin_dashboard,admin_product, admin_addproduct, admin_addcategory, admin_category, community_dashboard, community_addproduct, community_product,edit_profile, community_edit_profile,admin_delete_category, admin_edit_category, community_edit_product
+from giftapp.views import index, register, cart,about, detail, contact, userprofile,communityprofile, login_page,register,loggout,admin_dashboard,admin_product, admin_addproduct, admin_addcategory, admin_category, community_dashboard, community_addproduct, community_product,edit_profile, community_edit_profile,admin_delete_category, admin_edit_category, community_edit_product, admin_dashboard_cards
 from django.conf.urls.static import static
 from django.urls import path
 from giftapp import views
@@ -34,7 +34,6 @@ urlpatterns = [
     path('editprofile/',edit_profile, name='edit-profile'),
     path('communityprofile/',communityprofile, name='communityprofile'),
     path('communityeditprofile/',community_edit_profile, name='communityedit-profile'),
-
     path('admin_dashboard/',admin_dashboard,name='admin_dashboard'),
     path('community_dashboard/',community_dashboard,name='community_dashboard'),
     path('admin_addproduct/',admin_addproduct,name='admin_addproduct'),
@@ -45,13 +44,15 @@ urlpatterns = [
     path('admin_addcategory/',admin_addcategory,name='admin_addcategory'),
     # path('admin_edit_category/', admin_edit_category, name='admin_edit_category'),
     path('admin_edit_category/<int:category_id>/', views.admin_edit_category, name='admin_edit_category'),
-
+    path('admin_dashboard_cards/', admin_dashboard_cards, name='admin_dashboard_cards'),
     path('community_product/<int:product_id>/', views.community_product, name='community_product'),
     path('community_product', views.community_product, name='community_product'),
-
+    path('cart/', views.cart_view, name='cart_view'),
     path('community_product', views.community_product, name='community_product'),
+    path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
 
-
+    path('registered_customers/', views.registered_customer_count, name='registered_customer_count'),
+    path('detail/<int:product_id>/', views.product_detail, name='product_detail'),
     path('community_edit_product/<int:product_id>/', views.community_edit_product, name='community_edit_product'),
     path('admin_delete_category/<int:category_id>/',admin_delete_category, name='admin_delete_category'),
     path('products_list/<int:category_id>/',views.products_list,name='products_list'),

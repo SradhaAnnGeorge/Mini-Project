@@ -1,0 +1,108 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product.name }} - Product Detail</title>
+    <style>
+        /* Your CSS code here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #c3c1ba;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        .product-detail-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .product-image img {
+            max-width: 300px;
+            height: auto;
+        }
+
+        .product-details {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        .product-details h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .description, .price {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .actions {
+            margin-top: 20px;
+        }
+
+        .back-btn, .buy-now-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .back-btn:hover, .buy-now-btn:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="product-detail-container">
+        <div class="product-image">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        </div>
+        <div class="product-details">
+            <h1>{{ product.name }}</h1>
+            <p class="description">Description: {{ product.description }}</p>
+            <p class="price">Price: ${{ product.price }}</p>
+            <!-- Add more product details here -->
+            <div class="actions">
+                <a href="{% url 'index' %}" class="back-btn">Back to Home</a>
+                <a href="#" class="buy-now-btn">Pay Now</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

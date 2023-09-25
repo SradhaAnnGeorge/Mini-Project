@@ -62,6 +62,7 @@
                             <input type="text" id="id_name" name="name" class="form-control" placeholder="Category Name">
                             <span id="nameError" style="color: red;"></span>
                         </div>
+                        
                     </div>
                 </div>
                 <div>
@@ -75,7 +76,7 @@
 </form>
 
 
-<script>
+<!-- <script>
     var uniqueNames = new Set(); // To store unique category names
 
     // Populate uniqueNames with existing category names (if applicable)
@@ -121,6 +122,45 @@
             return true; // Allow form submission
         }
     }
+</script> -->
+<script>
+    // Initialize an array to store entered category names
+    var enteredCategories = ['Festive Special','Anniversary Gifts','Customized Gifts','Special Occasion','Birthday Gifts'];
+
+    // Function to validate the name
+    function validateName() {
+        var nameField = document.getElementById("id_name");
+        var nameValue = nameField.value.trim();
+        var nameError = document.getElementById("nameError");
+
+        // Use a regular expression to validate the name
+        var regex = /^[A-Z][a-zA-Z]* [A-Z][a-zA-Z]*$/;
+
+        if (!regex.test(nameValue)) {
+            nameError.textContent = "Category name should have two words with the first letter of each word capitalized, and no numbers.";
+        } else if (enteredCategories.includes(nameValue)) {
+            nameError.textContent = "Category name is already entered.";
+        } else {
+            nameError.textContent = "";
+        }
+    }
+
+    // Add event listener to trigger validation on input
+    var nameField = document.getElementById("id_name");
+    nameField.addEventListener("input", validateName);
+
+    // Add event listener to the form to prevent submitting if the name is already entered
+    var form = document.querySelector('form');
+    form.addEventListener('submit', function(event) {
+        var nameValue = nameField.value.trim();
+        if (enteredCategories.includes(nameValue)) {
+            event.preventDefault(); // Prevent form submission
+            alert("Category name is already entered.");
+        } else {
+            // If not already entered, add it to the list
+            enteredCategories.push(nameValue);
+        }
+    });
 </script>
 
 {% endblock content %}
