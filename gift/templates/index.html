@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
         <link rel="stylesheet" type="text/css" href="{% static 'assets/css/style.css' %}"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body>
         <header class="container-fluid bg-white">
@@ -24,13 +25,12 @@
                         <div class="col-md-4 d-flex align-items-end">
                             <ul class="ms-auto d-inline-flex">
                                 {% if user.is_authenticated %}
-                                <li class="p-2"><a target="_blank" href="{% url 'loggout' %}"><button class="btn px-4 btn-danger">Logout</button></a></li>
+                                <li class="p-2"><a target="_blank" href="{% url 'loggout' %}"><button class="btn px-4 btn-danger" id="t">Logout</button></a></li>
                                 <li class="p-2"><a target="_blank" href="{% url 'userprofile' %}"><button class="btn px-4 btn-danger">User Profile</button></a></li>
 
                                 {% else %}
                                 <li class="p-2"><a target="_blank" href="{% url 'login_page' %}"><button class="btn px-4 btn-danger">Login</button></a></li>
                                 <li class="p-2"><a target="_blank" href="{% url 'register' %}"><button class="btn px-4 btn-outline-danger">Sign Up</button></a></li>
-                                <!-- <li class="p-2"><a target="_blank" href="{% url 'admin_dashboard' %}"><button class="btn px-4 btn-outline-danger">Admin</button></a></li> -->
                                 
                                 {% endif %}
                             </ul>
@@ -49,10 +49,32 @@
                                
                             </div>
                             <div class="col-md-6 d-none d-md-block pt-2">
-                                <div class="input-group pt-1 mb-0">
-                                    <input type="text" class="form-control border-end-0 mb-0" placeholder="Search Products" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                    <span class="input-group-text sit border-start-0" id="basic-addon2"><i class="bi bi-search"></i></span>
-                                </div>
+<div class="row">
+    <div class="col-md-12">
+        <form id="search-form" method="GET" action="{% url 'search_product' %}">
+            <div class="input-group">
+                <input type="text" class="form-control" name="productname" id="productname" placeholder="Search by Product Name" oninput="toggleSearchButton()">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" id="search-button" type="submit" disabled><i class="fa fa-search"></i> </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleSearchButton() {
+        const productNameInput = document.getElementById("productname");
+        const searchButton = document.getElementById("search-button");
+
+        if (productNameInput.value.trim() === "") {
+            searchButton.disabled = true;
+        } else {
+            searchButton.disabled = false;
+        }
+    }
+</script>
+
                             </div>
                             <div class="col-md-3 col-3 pt-1 text-end">
                                 <a href="{% url 'cart' %}">
@@ -60,9 +82,20 @@
                                         <i class="bi fs-4 bi-basket"></i>
                                     </button>
                                 </a>
-                                <button type="button" class="btn d-none d-md-inline-block ms-3 btn-light shadow-md border position-relative">
-                                    <i class="bi fs-4 bi-heart"></i>
-                                </button>
+                               {% for product in products %}
+            <div class="col-lg-3 col-md-4 mb-4">
+                <div class="product-box bg-white p-2 shadow-md">
+                    <!-- Product information here -->
+                    <h4>{{ product.name }}</h4>
+                    <p>{{ product.description }}</p>
+                    <p>${{ product.price }}</p>
+                    <!-- Add your button here -->
+                    <button type="button" class="btn d-none d-md-inline-block ms-3 btn-light shadow-md border position-relative">
+                        <i class="bi fs-4 bi-heart"></i>
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -104,7 +137,6 @@
                             </li>
                             <li class="p-21 px-4 active"><a class="text-white" href="{% url 'index' %}">Home </a></li>
                             <li class="p-21 px-4"><a class="text-white" href="{% url 'about' %}">About Us </a></li>
-                            <li class="p-21 px-4"><a class="text-white" href="{% url 'about' %}">Contact </a></li>
                         </ul>
                     </div>
                 </div>
@@ -133,11 +165,11 @@
             </div>
         </div>
         
-        <div class="latest-products pt-5 pb-0">
+        {% comment %} <div class="latest-products pt-5 pb-0">
             <div class="container-xl">
                 <div class="section-tile row">
                    <div class="col-md-10 text-center mx-auto">
-                         <h2>Featured Products</h2>
+                         <h2 class="fproducts">Featured Products</h2>
                    </div>
                 </div>
                 <div class="row mt-5">
@@ -443,7 +475,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
         
         <div class="ad-cover container-fluid pb-4">
            <div class="container-lg">

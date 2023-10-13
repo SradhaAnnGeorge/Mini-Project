@@ -4,3 +4,6 @@ from .user_profile import Userprofile
 from .community_profile import Communityprofile
 from .cart import Cart
 from .cart_item import CartItem
+from .BillingInformation import BillingInformation
+from .payment import Payment
+from .register import Register

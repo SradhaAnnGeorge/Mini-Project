@@ -9,6 +9,7 @@
     .market-update-block {
       padding: 2em 2em;
       background: #999;
+      top : 20px;
     }
 
     .market-update-block h3 {
@@ -91,6 +92,7 @@
       background: #fff;
       text-align: center;
       border-radius: 49px;
+      top : 20px;
       -webkit-border-radius: 49px;
       -moz-border-radius: 49px;
       -o-border-radius: 49px;
@@ -131,6 +133,7 @@
     .fa{
       padding-top: 0.2em;
     }
+
   </style>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -139,48 +142,46 @@
 </head>
 
 <body>
-  <div class="market-updates">
+  <div class="row market-updates">
     <div class="col-md-4 market-update-gd">
-      <div class="market-update-block clr-block-1">
-        <div class="col-md-8 market-update-left">
-          <h3> {{ registered_customers_count }}</h3>
-          <h4>Registered Customers</h4>
-      </div>
-      
-        <div class="col-md-4 market-update-right">
-          <i class="fa fa-users"></i>
+        <div class="market-update-block clr-block-1">
+            <div class="col-md-8 market-update-left">
+                <h3>{{ customer_count }}</h3>
+                <h4>Registered Communities</h4>
+            </div>
+            <div class="col-md-4 market-update-right">
+                <i class="fa fa-users"></i>
+            </div>
+            <div class="clearfix"></div>
         </div>
-        <div class="clearfix"> </div>
-      </div>
     </div>
     <div class="col-md-4 market-update-gd">
-      <div class="market-update-block clr-block-2">
-        <div class="col-md-8 market-update-left">
-          <h3>{{productcount}}</h3>
-          <h4>Total Product</h4>
-
+        <div class="market-update-block clr-block-2">
+            <div class="col-md-8 market-update-left">
+                <h3>{{ product_count }}</h3>
+                <h4>Total Product</h4>
+            </div>
+            <div class="col-md-4 market-update-right">
+                <i class="fa fa-shopping-cart"></i>
+            </div>
+            <div class="clearfix"></div>
         </div>
-        <div class="col-md-4 market-update-right">
-          <i class="fa fa-shopping-cart"></i>
-        </div>
-        <div class="clearfix"> </div>
-      </div>
     </div>
     <div class="col-md-4 market-update-gd">
-      <div class="market-update-block clr-block-3">
-        <div class="col-md-8 market-update-left">
-          <h3>{{ordercount}}</h3>
-          <h4>Total Orders</h4>
-
+        <div class="market-update-block clr-block-3">
+            <div class="col-md-8 market-update-left">
+                <h3>{{ community_count }}</h3>
+                <h4>Total Community</h4>
+            </div>
+            <div class="col-md-4 market-update-right">
+                <i class="fa fa-bar-chart"></i>
+            </div>
+            <div class="clearfix"></div>
         </div>
-        <div class="col-md-4 market-update-right">
-          <i class="fa fa-bar-chart"> </i>
-        </div>
-        <div class="clearfix"> </div>
-      </div>
     </div>
-
-  </div>
+</div>
   <br><br>
+
+
 </body>
 </html>

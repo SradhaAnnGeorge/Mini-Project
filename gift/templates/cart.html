@@ -1,4 +1,4 @@
-
+ {% load static %} 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,24 +85,32 @@
 </head>
 <body>
 <!-- cart.html -->
-
+<a href="{% url 'index' %}">Continue Shopping</a>
 <div class="cart-container">
     <h1>Cart</h1>
     <ul>
         {% if cart_items %}
             {% for item in cart_items %}
+                {% if item.status == 1 %}
             <li>
                 <div>
-                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="width:185px;height:125px;">
                     {{ item.product.name }} - Price: ${{ item.product.price }}
                 </div>
                 <div class="quantity">
-                    <button onclick="decrementQuantity('{{ item.id }}', {{ item.product.price }})">-</button>
+                    <!-- {% for product_id, item in cart.items %}
+                     <p>{{ item.name }} - ${{ item.price }} (Quantity: {{ item.quantity }})
+                         <a href="{% url 'remove_from_cart' product_id %}">Remove</a></p>
+                    {% endfor %} -->
+
+                    <button onclick="decrementQuantity('{{ item.id }}', {{ item.product.price }})   ">-</button>
                     <span id="quantity_{{ item.id }}">{{ item.quantity }}</span>
+                    
                     <button onclick="incrementQuantity('{{ item.id }}', {{ item.product.price }})">+</button>
-                    <button onclick="removeItem('{{ item.id }}', {{ item.product.price }})">Remove</button>
+                    <a href="{% url 'remove_from_cart' item.product.id %}">Remove</a>
                 </div>
             </li>
+            {% endif %}
             {% endfor %}
         {% else %}
             <li>
@@ -111,13 +119,13 @@
         {% endif %}
     </ul>
     <div id="total-price">Total Price: ${{ total_price }}</div>
-    <a href="{% url 'index' %}">Continue Shopping</a>
+    <a href="{% url 'billing' user_id=request.user.id %}">Checkout</a>
 </div>
 
 
     <script>
 
-    var totalPrice = {{ total_price }}; // Initialize the total price
+    var totalPrice = {{ total_price }}; 
 
     function incrementQuantity(productId, price) {
         var quantityElement = document.getElementById('quantity_' + productId);
@@ -133,7 +141,7 @@
         if (currentQuantity > 1) {
             currentQuantity--;
             quantityElement.textContent = currentQuantity;
-            updateTotalPrice(-price); // Decrement the total price
+            updateTotalPrice(-price); 
         }
     }
 
@@ -143,14 +151,13 @@
         totalElement.textContent = 'Total Price: $' + totalPrice.toFixed(2);
     }
     
-    function removeItem(productId, price) {
+    function remove_from_cart(productId, price) {
         var quantityElement = document.getElementById('quantity_' + productId);
         var currentQuantity = parseInt(quantityElement.textContent);
         var listItem = quantityElement.parentElement.parentElement;
         listItem.remove();
         updateTotalPrice(-price * currentQuantity);
         
-        // Check if there are no items left in the cart and display a message
         var cartList = document.querySelector('ul');
         if (cartList.children.length === 0) {
             cartList.innerHTML = '<li><p>Your cart is empty.</p></li>';

@@ -2,102 +2,117 @@
 {% block content %}
 <style media="screen">
     body {
-        background-color: #ffffff;
+        background-color: #f5f5f5;
+        font-family: Arial, sans-serif;
     }
 
-    a:link {
-        text-decoration: none;
+    .container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
 
     .note {
         text-align: center;
-        height: 80px;
-        background: -webkit-linear-gradient(left, #0072ff, #8811c5);
+        background: linear-gradient(to right, #0072ff, #8811c5);
         color: #fff;
         font-weight: bold;
-        line-height: 80px;
+        padding: 10px 0;
+        border-radius: 10px 10px 0 0;
     }
 
-    .form-content {
-        padding: 5%;
-        border: 1px solid #ced4da;
-        margin-bottom: 2%;
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        color: #333;
     }
 
     .form-control {
-        border-radius: 1.5rem;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        width: 100%;
+        transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #0072ff;
+    }
+
+    .error {
+        color: #d9534f;
+        font-size: 0.8rem;
     }
 
     .btnSubmit {
-        border: none;
-        border-radius: 1.5rem;
-        padding: 1%;
-        width: 20%;
-        cursor: pointer;
-        background: #005d94;
+        background-color: #0072ff;
         color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 12px 20px;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s;
     }
 
-    .menu {
-        top: 50px;
-    }
-
-    /* Add some basic styling for error messages */
-    .error {
-        color: black;
-        font-size: 0.8rem;
+    .btnSubmit:hover {
+        background-color: #005d94;
     }
 </style>
 
 <br><br><br><br>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="container register-form">
-        <div class="form">
-            <div class="note">
-                <p>EDIT PROFILE</p>
+    <div class="container">
+        <div class="note">
+            <p>EDIT PROFILE</p>
+        </div>
+        <div class="form-content">
+            <div class="form-group">
+                <label for="id_name">Name</label>
+                <input type="text" id="id_name" name="name" value="{{ user.userprofile.name }}"
+                    class="form-control" required maxlength="255">
+                <span id="nameError" class="error"></span>
             </div>
-            <div class="form-content">
-                <div class="row">
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label for="id_name">Name</label>
-                        <input type="text" id="id_name" name="name" value="{{ user.userprofile.name }}"
-                            class="form-control" required maxlength="255">
-                        <span id="nameError" class="error"></span>
-                    </div>
-                        <div class="form-group">
-                            <label for="id_mobile">Mobile</label>
-                            <input type="tel" id="id_mobile" name="mobile" value="{{ user.userprofile.mobile }}"
-                                class="form-control">
-                            <span id="mobileError" class="error"></span>
-                        </div>
-
-                        <div class="form-group">
-                          <label for="id_email">Email</label>
-                          <input type="email" id="id_email" name="email" value="{{ user.username }}" class="form-control" required>
-                          <span id="emailError" class="error"></span>
-                      </div>
-                      
-                        <div class="form-group">
-                            <label for="id_profile_pic">Profile Picture</label>
-                            <input type="file" id="id_profile_pic" name="profile_pic" class="form-control-file">
-                        </div>
-                        <div class="form-group">
-                          <label for="id_address">Address</label>
-                          <input type="text" id="id_address" name="address" value="{{ user.userprofile.address }}" class="form-control" required>
-                          <span id="addressError" class="error"></span>
-                      </div>
-                      
-                    </div>
-                </div>
-                <div>
-                    <center><button type="submit" class="btnSubmit">Edit</button></center>
-                </div>
+            <div class="form-group">
+                <label for="id_mobile">Mobile</label>
+                <input type="tel" id="mobile" name="mobile" value="{{ user.userprofile.mobile }}"
+                    class="form-control">
+                <span id="mobileError" class="error"></span>
+            </div>
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                <input type="email" id="id_email" name="email" value="{{ user.username }}" class="form-control" required>
+                <span id="emailError" class="error"></span>
+            </div>
+            <div class="form-group">
+                <label for="id_profile_pic">Profile Picture</label>
+                <input type="file" id="id_profile_pic" name="profile_pic" class="form-control-file">
+            </div>
+            <div class="form-group">
+                <label for="id_address">Address</label>
+                <input type="text" id="id_address" name="address" value="{{ user.userprofile.address }}" class="form-control" required>
+                <span id="addressError" class="error"></span>
+            </div>
+            <div>
+                <button type="submit" class="btnSubmit">Edit</button>
             </div>
         </div>
     </div>
 </form>
+</div>
+</div>
+</form>
+</style>
+
+
 
 <script>
 

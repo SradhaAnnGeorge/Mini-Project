@@ -81,6 +81,8 @@ SOCIALACCOUNT_PROVIDERS={
     }
 }
 
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -154,6 +156,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
+
+RAZOR_KEY_ID = 'rzp_test_bgPgVacbY9I2m2'
+RAZOR_KEY_SECRET = 'QAM6WRq8TH1ZUDTd5UcmNjEj'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

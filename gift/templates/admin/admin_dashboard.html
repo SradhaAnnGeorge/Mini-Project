@@ -1,12 +1,50 @@
-{% extends 'admin/admin_base.html' %}
+ {% extends 'admin/base1.html' %}
 {% load static %}
 {% block content %}
 <br>
-{%include 'admin/admin_dashboard_cards.html'%}
+{%include 'admin/admin_dashboard_cards.html'%} 
 <br><br><br><br><br>
+<!-- <style>    
+     table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
 
-<hr><hr>
-<!-- <div class="container" >
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .btn {
+        padding: 8px 12px;
+        margin-right: 5px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: #fff;
+    }
+    .temp{
+      margin-top: 50px;
+    }
+</style>
+<hr><hr> -->
+ <!-- <div class="container" >
 
     <div class="panel panel-primary" >
       <div class="panel-heading" style="text-align:center;">
@@ -47,8 +85,7 @@
           {%endif%}
           {% endfor %}
         </tr>
-        {% endfor %} -->
-
+        {% endfor %} 
 
 
 
@@ -59,4 +96,190 @@
 </div>
 
 
-{% endblock content %}
+   -->
+   <style>
+    /* Styles for Navbar */
+  .navbar-brand {
+      font-size: 24px;
+      font-family: sans-serif;
+      color: #007bff; 
+  }
+  
+  /* Styles for Footer */
+  footer {
+      background-color: #000; /* Black background */
+      padding: 20px 0;
+      margin-top: 50px;
+      color: #fff; /* White text color */
+  }
+  
+  /* Social Media Icons */
+  .fa {
+      font-size: 30px;
+      width: 2em;
+      height: 2em;
+      text-align: center;
+      text-decoration: none;
+      margin: 0 10px;
+      border-radius: 50%;
+      padding-top: 10px;
+      transition: opacity 0.3s, transform 0.3s;
+  }
+  
+  .fa:hover {
+      opacity: 0.7;
+      transform: scale(1.1);
+  }
+  
+  /* Social Media Icon Colors */
+  .fa-facebook {
+      background: #3B5998;
+      color: #fff;
+  }
+  
+  .fa-whatsapp {
+      background: #25d366;
+      color: #fff;
+  }
+  
+  .fa-twitter {
+      background: #55ACEE;
+      color: #fff;
+  }
+  
+  .fa-instagram {
+      background: #125688;
+      color: #fff;
+  }
+  
+  /* Centered Text */
+  p {
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+  }
+  
+  /* Table Styles */
+ /* Updated table styles */
+/* Updated table styles */
+table {
+    width: 5px;
+    position: relative;
+    top: 180px;
+    right: 0; /* Move the table to the right side */
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    float: right;
+    /* Add a maximum width to limit column size */
+    max-width: 0px; /* Adjust this value as needed */
+}
+
+th, td {
+    padding: 1px; /* Decrease cell padding for smaller columns */
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+
+  /* Button Styles */
+  .approve-btn, .delete-btn {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      margin-right: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+  }
+  
+  .approve-btn:hover, .delete-btn:hover {
+      background-color: #0056b3;
+  }
+  
+  /* Alert Styles */
+  .alert {
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      font-size: 16px;
+  }
+  
+  .alert-success {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+  }
+  
+  .alert-danger {
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+      color: #721c24;
+  }
+  
+  /* Temporary Margin for the Content */
+  .temp {
+      margin-top: 50px;
+  }
+  
+    </style>
+
+              <table class="table table-bordered" style="margin-left:30%; margin-top:-300px; margin-right:50px;">
+      <thead>
+          <tr>
+              <th >Username</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Actions</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for commuser in commusers %}
+          {% if not user.user.is_superuser %}
+          <tr>
+              <td>{{ commuser.user.username }}</td>
+              <td>{{ commuser.user.email }}</td>
+              <td>
+                  {% if commuser.is_approval %}
+                  <span class="badge badge-success">Approved</span>
+                  {% else %}
+                  <span class="badge badge-secondary">Pending</span>
+                  {% endif %}
+              </td>
+              <td>
+                  {% if not commuser.is_approval %}
+                  <form method="POST" action="{% url 'approve_user' commuser.user_id %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-success">Approve</button>
+                  </form>
+                  {% else %}
+                  <form method="POST" action="{% url 'delete_user' commuser.user_id %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger">Inactive</button>
+                  </form>
+                  {% endif %}
+              </td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+      </tbody>
+  </table>
+  
+          </main>
+      </div>
+  </div>
+    
+
+
+{% endblock content %} 

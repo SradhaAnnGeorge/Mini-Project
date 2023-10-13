@@ -1,4 +1,4 @@
-{% extends 'ecom/admin_base.html' %}
+{% extends 'admin/admin_base.html' %}
 {% load static %}
 {% block content %}
 
@@ -9,6 +9,65 @@
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
   <style media="screen">
+  .navbar-brand {
+      font-size: 24px;
+      font-family: sans-serif;
+      color: #007bff; 
+  }
+  
+  /* Styles for Footer */
+  footer {
+      background-color: #000; /* Black background */
+      padding: 20px 0;
+      margin-top: 50px;
+      color: #fff; /* White text color */
+  }
+  
+  /* Social Media Icons */
+  .fa {
+      font-size: 30px;
+      width: 2em;
+      height: 2em;
+      text-align: center;
+      text-decoration: none;
+      margin: 0 10px;
+      border-radius: 50%;
+      padding-top: 10px;
+      transition: opacity 0.3s, transform 0.3s;
+  }
+  
+  .fa:hover {
+      opacity: 0.7;
+      transform: scale(1.1);
+  }
+  
+  /* Social Media Icon Colors */
+  .fa-facebook {
+      background: #3B5998;
+      color: #fff;
+  }
+  
+  .fa-whatsapp {
+      background: #25d366;
+      color: #fff;
+  }
+  
+  .fa-twitter {
+      background: #55ACEE;
+      color: #fff;
+  }
+  
+  .fa-instagram {
+      background: #125688;
+      color: #fff;
+  }
+  
+  /* Centered Text */
+  p {
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+  }
     a:link {
       text-decoration: none;
     }
@@ -20,51 +79,62 @@
     .row {
       margin: 100px;
     }
-  </style>
-</head>
-<!--
-written By : sumit kumar
-facebook : fb.com/sumit.luv
--->
+            table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px auto;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+        
+    </style>
+  </head>
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h6 class="panel-title">Total Orders</h6>
     </div>
-    <table class="table table-hover table-bordered" id="dev-table">
-      <thead>
-        <tr>
-          <th>Customer</th>
-          <th>Contact</th>
-          <th>Shipping Address</th>
-          <th>Product</th>
-          <th>Image</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <!-- p for product, c for customer-->
-      {% for product,customer,order in data %}
-      <tr>
-        {% for c in customer %}
-        <td> {{c.get_name}}</td>
-        <td>{{c.mobile}}</td>
-        <td>{{order.address}}</td>
 
-        {% endfor %}
-        {% for p in product %}
-        <td> {{p.name}}</td>
-        <td> <img src="{% static p.product_image.url %}" alt="Profile Pic" height="40px" width="40px" /></td>
-        <td>{{order.status}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'update-order' order.id  %}"><span class="glyphicon glyphicon-edit"></span></a>
-        <a class="btn btn-danger btn-xs" href="{% url 'delete-order' order.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Town</th>
+                <th>Zip Code</th>
+                <th>Payment Status</th>
+                <th>Amount</th>
+                <th>Products</th>
 
-        {% endfor %}
-
-
-
-      </tr>
-      {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for billing_info in billing_information_list %}
+            <tr>
+                <td>{{ billing_info.name }}</td>
+                <td>{{ billing_info.address }}</td>
+                <td>{{ billing_info.town }}</td>
+                <td>{{ billing_info.zip_code }}</td>
+                <td>{{ billing_info.payment_status }}</td>
+                <td>{{ billing_info.amount }}</td>
+                <td>
+                    <ul>
+                        {% for product in billing_info.product.all %}
+                        <li>{{ product.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
   </div>
 </div>

@@ -57,6 +57,7 @@
           <th>Price</th>
           <th>Description</th>
           <th>Category</th>
+  
 
           <th>Actions</th>
         </tr>
@@ -73,7 +74,6 @@
         <td>{{ p.category.name }}</td>
         <td><a class="btn btn-primary btn-xs" href="{% url 'community_edit_product' p.id %}"><span class="glyphicon glyphicon-edit"></span></a>
           <a class="btn btn-danger btn-xs" href="{% url 'community_deleteproduct' p.id %}"><span class="glyphicon glyphicon-trash"></span></a></td>
-
       </tr>
       {%else%}
       <br><br><br>
@@ -85,7 +85,8 @@
 </div>
 
 <a href="{% url 'community_addproduct' %}" class="float">
-<i class="fa fa-plus my-float"></i>
+<i class="fa fa-plus my-float" style="font-size: 24px; color: #FFFFFF;"></i>
+
 </a>
 
 {% endblock content %}

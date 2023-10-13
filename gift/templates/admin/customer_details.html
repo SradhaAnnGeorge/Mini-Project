@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #343a40;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 24px;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .navbar a {
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            color: #fff;
+        }
+
+        .navbar a:hover {
+            background-color: #555;
+            border-radius: 5px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin: 20px;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .user-table th, .user-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .user-table th {
+            background-color: #f2f2f2;
+        }
+
+        .user-table th:nth-child(n+2), .user-table td:nth-child(n+2) {
+            text-align: center;
+        }
+
+        .user-table th:first-child, .user-table td:first-child {
+            font-weight: bold;
+        }
+
+        .action-button {
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .block-button {
+            background-color: #ff4d4d;
+            color: #fff;
+            border: 1px solid #ff4d4d;
+        }
+
+        .block-button:hover {
+            background-color: #ff6666;
+            border: 1px solid #ff6666;
+        }
+
+        .unblock-button {
+            background-color: #1fd169;
+            color: #fff;
+            border: 1px solid #1fd169;
+        }
+
+        .unblock-button:hover {
+            background-color: #24e57f;
+            border: 1px solid #24e57f;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
+        <h1>User Details</h1>
+        <div class="form-inline my-2 my-lg-0">
+            <a href="{% url 'loggout' %}" class="btn btn-warning mr-2">Logout</a>
+        </div>      
+    </div>
+
+    <div class="card">
+        <!-- User Details Table -->
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    {% if not user.is_superuser %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ user.userprofile.name }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.userprofile.mobile}}</td>
+                        <td>
+                            <form method="post" action="{% url 'block_user' user.id %}">
+                                {% csrf_token %}
+                                {% if user.is_blocked %}
+                                    <button type="submit" class="action-button unblock-button">Unblock</button>
+                                {% else %}
+                                    <button type="submit" class="action-button block-button">Block</button>
+                                {% endif %}
+                            </form>
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

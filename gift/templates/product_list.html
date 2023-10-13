@@ -11,6 +11,7 @@
             <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
             <link rel="stylesheet" type="text/css" href="{% static 'assets/css/style.css' %}"/>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
             <style>
@@ -42,7 +43,6 @@
                                     {% else %}
                                     <li class="p-2"><a target="_blank" href="{% url 'login_page' %}"><button class="btn px-4 btn-danger">Login</button></a></li>
                                     <li class="p-2"><a target="_blank" href="{% url 'register' %}"><button class="btn px-4 btn-outline-danger">Sign Up</button></a></li>
-                                    <!-- <li class="p-2"><a target="_blank" href="{% url 'admin_dashboard' %}"><button class="btn px-4 btn-outline-danger">Admin</button></a></li> -->
                                     
                                     {% endif %}
                                 </ul>
@@ -53,32 +53,52 @@
                 </div>
                 <header>
                     <div class="logo-container p-2">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-3 col-9 pt-1 pb-2">
-                                    
-                                        <img class="logo" src="{% static 'assets/images/logo.png' %}" alt="logo" style="width:165px;height:45px;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3 col-9 pt-1 pb-2">
                                 
-                                </div>
-                                <div class="col-md-6 d-none d-md-block pt-2">
-                                    <div class="input-group pt-1 mb-0">
-                                        <input type="text" class="form-control border-end-0 mb-0" placeholder="Search Products" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                        <span class="input-group-text sit border-start-0" id="basic-addon2"><i class="bi bi-search"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-3 pt-1 text-end">
-                                    <a href="{% url 'cart' %}">
-                                        <button type="button" class="btn btn-light shadow-md border position-relative">
-                                            <i class="bi fs-4 bi-basket"></i>
-                                        </button>
-                                    </a>
-                                    <button type="button" class="btn d-none d-md-inline-block ms-3 btn-light shadow-md border position-relative">
-                                        <i class="bi fs-4 bi-heart"></i>
+                                    <img class="logo" src="{% static 'assets/images/logo.png' %}" alt="logo" style="width:165px;height:45px;">
+                               
+                            </div>
+                            <div class="col-md-6 d-none d-md-block pt-2">
+<div class="row">
+    <div class="col-md-12">
+        <form id="search-form" method="GET" action="{% url 'search_product' %}">
+            <div class="input-group">
+                <input type="text" class="form-control" name="productname" id="productname" placeholder="Search by Product Name" oninput="toggleSearchButton()">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" id="search-button" type="submit" disabled><i class="fa fa-search"></i> </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    function toggleSearchButton() {
+        const productNameInput = document.getElementById("productname");
+        const searchButton = document.getElementById("search-button");
+
+        if (productNameInput.value.trim() === "") {
+            searchButton.disabled = true;
+        } else {
+            searchButton.disabled = false;
+        }
+    }
+</script>
+                            </div>
+                            <div class="col-md-3 col-3 pt-1 text-end">
+                                <a href="{% url 'cart' %}">
+                                    <button type="button" class="btn btn-light shadow-md border position-relative">
+                                        <i class="bi fs-4 bi-basket"></i>
                                     </button>
-                                </div>
+                                </a>
+                                <button type="button" class="btn d-none d-md-inline-block ms-3 btn-light shadow-md border position-relative">
+                                    <i class="bi fs-4 bi-heart"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
+                </div>
                     <div class="menu-bar bg-danger container-fluid border-top">
                         <div class="container">
                             <h6 class="d-md-none text-white p-3 mb-0 fw-bold">Menu
@@ -116,7 +136,6 @@
                                 </li>
                                 <li class="p-21 px-4 active"><a class="text-white" href="{% url 'index' %}">Home </a></li>
                                 <li class="p-21 px-4"><a class="text-white" href="{% url 'about' %}">About Us </a></li>
-                                <li class="p-21 px-4"><a class="text-white" href="{% url 'about' %}">Contact </a></li>
                             </ul>
                         </div>
                     </div>
@@ -127,19 +146,18 @@
         <div class="col-lg-3 col-md-4 mb-4">
             <div class="product-box bg-white p-2 shadow-md">
                 <div class="text-center">
-                    <a href="{% url 'detail' %}">
-                        <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}">
+                    <a href="">
+                        <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}"   >
                     </a>
                 </div>
                 <div class="detail p-2">
                     <h4 class="mb-1 fs-5 fw-bold">{{ product.name }}</h4>
                     <h4 class="mb-1 fs-5">{{ product.description }}</h4>
                     <b class="fs-4 text-danger">${{ product.price }}</b>
-                    <!-- Add any additional fields as needed -->
-
+                    
                     <ul class="mt-0 vgth">
                         <li class="fs-8">
-                            <!-- Add your rating stars here -->
+                           
                         </li>
                         <li class="float-end gvi">
                             <i class="bi text-danger bi-heart-fill"></i>

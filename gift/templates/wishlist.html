@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Wishlist</title>
+</head>
+<body>
+    <h1>My Wishlist</h1>
+    
+    <ul>
+        {% for item in wishlist_items %}
+            <li>
+                {{ item.product_id }} <!-- Display other item details as needed -->
+                <a href="{% url 'product_detail' item.product_id %}">Product Details</a>
+                <form method="post" action="{% url 'remove_from_wishlist' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Remove from Wishlist</button>
+                </form>
+            </li>
+        {% empty %}
+            <li>Your wishlist is empty.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'index' %}">Back to Home</a>
+</body>
+</html>

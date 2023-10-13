@@ -2,112 +2,145 @@
 {% load static %}
 <html lang="en">
 <head>
-  <title>community Panel </title>
+  <title>Community Panel</title>
   <meta charset="utf-8">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
   <style type="text/css">
-    .bs-example {
-      margin: 0px;
 
-    }
+.sidebar {
+    position: fixed;
+    height: 100%;
+    width: 200px; /* Decreased width */
+    top: 0;
+    left: 0;
+    background-color: #f5f5f5; /* Light gray background color */
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 20px;
+    color: #333; /* Darker text color */
+    font-family: Arial, sans-serif;
+}
 
-    .navbar-brand {
-      font-size: 20px;
-      font-family: sans-serif;
 
-    }
-        footer {
-          padding: 0px 0px 0px 0px;
-          background-color: black;
-          margin: 0px;
-        }
+.sidebar a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    transition: 0.2s;
+    color: #333; /* Darker text color */
+}
+
+.sidebar a:hover {
+    background-color: #007BFF; /* Background color on hover */
+    color: #fff; /* Text color on hover */
+}
+
+/* Sidebar icons */
+.sidebar i {
+    margin-right: 10px; /* Spacing between icon and text */
+}
+
+.main-content {
+    margin-left: 200px; /* Match the sidebar width */
+    transition: 0.3s;
+    padding: 20px;
+}
+
+/* Sidebar item styles */
+.sidebar-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd; /* Add a horizontal line between items */
+}
+
+/* Add a background color on hover */
+.sidebar-item:hover {
+    background-color: #f0f0f0;
+}
 
 
-        #ftr {
-
-          padding: 20px;
-        }
-
-        .fa {
-          font-size: 23px;
-          width: 2em;
-          height: 2em;
-          text-align: center;
-          text-decoration: none;
-          margin: 5px 2px;
-          border-radius: 50%;
-          padding-top: 0.5em;
-      }
-
-        .fa:hover {
-          opacity: 0.5;
-          text-decoration: none;
-        }
-
-        .fa-facebook {
-          background: #3B5998;
-          color: white;
-          margin-top: 30px;
-        }
-
-        .fa-whatsapp {
-          background: #25d366;
-          color: white;
-        }
-
-        .fa-twitter {
-          background: #55ACEE;
-          color: white;
-        }
-
-        .fa-instagram {
-          background: #125688;
-          color: white;
-        }
-
-        p {
-          text-align: center;
-
-        }
   </style>
 </head>
-
 <body>
+          {% if existing_certification %}
+
+            {% if existing_certification.is_approved == 'pending' %}
+            <h5 class="card-title text-dark fw-semibold mb-4">Store Licence Approval</h5>
+            <p class="certification-message">You have already entered your Licence details.</p>
+
+            {% elif existing_certification.is_approved == 'approved' %}
+              
+
+                <div class="sidebar" id="mySidebar">
+                  <div class="sidebar-item">
+                      <a href="{% url 'community_dashboard' %}">
+                          <i class="fa fa-dashboard"></i>Dashboard
+                      </a>
+                  </div>
+                  <div class="sidebar-item">
+                      <a href="{% url 'communityprofile' %}">
+                          <i class="fa fa-user"></i>Profile
+                      </a>
+                  </div>
+                  <div class="sidebar-item">
+                      <a href="{% url 'community_product' %}">
+                          <i class="fa fa-cubes"></i>Products
+                      </a>
+                  </div>
+                  <div class="sidebar-item">
+                      <a href="{% url 'loggout' %}">
+                          <i class="fa fa-sign-out"></i>Logout
+                      </a>
+                  </div>
+                </div>
 
 
 
-  <div class="bs-example">
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background:#343A40;">
-      <a href="{% url 'community_dashboard' %}" class="navbar-brand">Community Panel</a>
-      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+            {% elif existing_certification.is_approved == 'rejected' %}
+            <h5 class="card-title text-dark fw-semibold mb-4">Store Licence Approval</h5>
+            <p class="certification-message">Your Application is rejected.</p>
+            {% else %}
+              <p> Not working </p>                
+            {% endif %}
+          {% else %}
+          <h5 class="card-title text-dark fw-semibold mb-4">Store Licence Approval</h5>
+            <!-- Display the certification form -->
+            <form method="post" enctype="multipart/form-data" >
+              {% csrf_token %}
+              
+              <div class="form-group mb-3" style="margin-top: 10px;">
+                <label for="certification_image">Products Image:</label>
+                <input type="file" id="certification_image" name="certification_image" accept="image/*" required>
+                <span id="certification_image_error" class="text-danger"></span>
+              </div>
+              <div class="form-group mb-3" style="margin-top: 10px;">
+                <label for="owner_name">Name :</label>
+                <input type="text" id="owner_name" name="owner_name" class="form-control" value="{{ user.communityprofile.name }}" readonly>
+                <span id="owner_name_error" class="text-danger"></span>
 
-      <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-        <div class="navbar-nav">
-          <!-- <a href="/view-customer" class="nav-item nav-link">Customer</a> -->
-          <!-- <a href="/admin-view-booking" class="nav-item nav-link">View Orders</a> -->
-          <a href="{% url 'community_product' %}" class="nav-item nav-link">Manage Products</a>
-          <!-- <a href="{% url 'admin_category' %}" class="nav-item nav-link">Manage Category</a> -->
-          <!-- <a href="/view-feedback" class="nav-item nav-link">Feedback</a> -->
-        </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          {% endif %}
 
-        <div class="navbar-nav navbar-right">
-          <a href="/logout" class="nav-item nav-link"> Logout</a>
-          <a href="{% url 'communityprofile' %}" class="nav-item nav-link"> Communityprofile</a>
 
-        </div>
 
-      </div>
-    </nav>
+
+  <div class="main-content">
+    {% block content %}
+    {% endblock content %}
   </div>
-  {% block content %}
 
-  {% endblock content %}
-  
-<br><br><br><br><br><br><br><br>
+  <!-- JavaScript to toggle the sidebar -->
+  <script>
+    function openSidebar() {
+      document.getElementById("mySidebar").style.width = "250px";
+    }
+
+    function closeSidebar() {
+      document.getElementById("mySidebar").style.width = "0";
+    }
+  </script>
 </body>
 </html>
