@@ -91,7 +91,7 @@
         <!-- Billing Information -->
         <h2>Billing Address</h2>
         <label for="billing_name">Name:</label>
-        <input type="text" id="billing_name" name="name" placeholder=" Name" value=" " required>
+        <input type="text" id="billing_name" name="name" placeholder=" Name" value="{{ user.userprofile.name }}" required>
         <br>
 
         <label for="billing_address">Address:</label>

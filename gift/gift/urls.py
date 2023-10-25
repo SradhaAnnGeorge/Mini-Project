@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
-from giftapp.views import index, register, cart,about, viewproducts,detail, contact, userprofile,communityprofile, login_page,register, dashlegal,approve_certification,loggout,admin_dashboard, admin_addcategory, admin_category, community_dashboard, community_addproduct, community_product,edit_profile, community_edit_profile,admin_delete_category, admin_edit_category, community_edit_product,paymenthandler,payment,admin_view_booking
+from giftapp.views import index, register, cart,about, viewproducts,detail, contact, userprofile,communityprofile, login_page,register,approve_certification,loggout,admin_dashboard, admin_addcategory, admin_category, community_dashboard, community_addproduct, community_product,edit_profile, community_edit_profile,admin_delete_category, admin_edit_category, community_edit_product,paymenthandler,payment,admin_view_booking
 from django.conf.urls.static import static
 from django.urls import path
 from giftapp import views
@@ -55,7 +55,7 @@ urlpatterns = [
     path('products_list/<int:category_id>/',views.products_list,name='products_list'),
     path('search_product', views.search_product, name='search_product'),
     path('admin_category/',admin_category,name='admin_category'),
-    path('dashlegal', views.dashlegal, name='dashlegal'),
+
     path('admin_view_booking/',admin_view_booking,name='admin_view_booking'),
 
     path('login_page',login_page,name='login_page'),
@@ -77,4 +77,5 @@ urlpatterns = [
     path('viewproducts',viewproducts,name='viewproducts'),
    
 ]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

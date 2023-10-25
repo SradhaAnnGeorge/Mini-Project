@@ -75,6 +75,11 @@
               <input type="radio" id="staff" name="user_role" value="staff">
               <label for="staff">Yes</label>
             </div>
+            <div class="form-group" id="certificationImageField" style="display: none;">
+              <label for="certification_image">Certification Image:</label>
+              <input type="file" class="form-control" id="certification_image" name="certification_image">
+              <small id="certificationImageError" class="form-text text-danger"></small>
+            </div>
             <button type="submit" class="btn btn-primary">Register</button>
             <div class="mt-3">
               <p>Already have an account? <a href="{% url 'login_page' %}">Login</a></p>
@@ -89,13 +94,51 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+
   <script>
+    const sellerRadio = document.getElementById('staff');
+const certificationImageField = document.getElementById('certificationImageField');
+
+sellerRadio.addEventListener('change', function () {
+  if (sellerRadio.checked) {
+    certificationImageField.style.display = 'block';
+  } else {
+    certificationImageField.style.display = 'none';
+  }
+});
+  </script>
+
+
+
+
+
+  <script>
+
+
     const registrationForm = document.getElementById('registrationForm');
-    //const usernameInput = document.getElementById('username');
+    const nameInput = document.getElementById('name');
+    const nameError = document.getElementById('usernameError');
     const emailInput = document.getElementById('email');
     const phoneNumberInput = document.getElementById('phoneNumber');
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirmPassword');
+    const certificationImageInput = document.getElementById('certification_image');
+    const certificationImageError = document.getElementById('certificationImageError');
+
+  function validateName() {
+  const nameValue = nameInput.value;
+
+  // Regular expression to check if the name contains only alphabets and starts with a capital letter
+  const namePattern = /^[A-Z][a-zA-Z]*$/;
+
+  if (!namePattern.test(nameValue)) {
+    nameError.textContent = 'Name should start with a capital letter and contain only alphabets.';
+    return false;
+  } else {
+    nameError.textContent = '';
+    return true;
+  }
+}
     
     function validateEmail() {
       const emailValue = emailInput.value;
@@ -147,11 +190,27 @@
         return true;
       }
     }
-   // usernameInput.addEventListener('keyup', validateUsername);
+
+  function validateCertificationImage() {
+  const certificationImageValue = certificationImageInput.value;
+  const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+  const extension = certificationImageValue.substring(certificationImageValue.lastIndexOf('.') + 1).toLowerCase();
+
+  if (!allowedExtensions.includes(`.${extension}`)) {
+    certificationImageError.textContent = 'File format must be JPEG, PNG, or JPG.';
+    return false;
+  } else {
+    certificationImageError.textContent = '';
+    return true;
+  }
+}
+
+    nameInput.addEventListener('blur', validateName);
     emailInput.addEventListener('keyup', validateEmail);
     phoneNumberInput.addEventListener('keyup', validatePhoneNumber);
     passwordInput.addEventListener('keyup', validatePassword);
     confirmPasswordInput.addEventListener('keyup', validateConfirmPassword);
+    certificationImageInput.addEventListener('change', validateCertificationImage);
 
     // Validate on form submit
     registrationForm.addEventListener('submit', function(event) {

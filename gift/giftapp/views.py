@@ -1,12 +1,10 @@
-from datetime import timezone
 from django.db import IntegrityError
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.urls import reverse
-from .models import Product, Category,Userprofile, Communityprofile, Cart, CartItem,BillingInformation,Certification
-
+from .models import Product, Category,Userprofile, Communityprofile, Cart, CartItem,BillingInformation
 
 def index(request):
     return render(request,'index.html')
@@ -35,36 +33,10 @@ def admin_dashboard(request):
 
 
 def community_dashboard(request):
-    user=request.user
     products = Product.objects.all()
     product_count = products.count()
-    # existing_certification = Certification.objects.filter(user=user).first()
-
-    # if existing_certification:
-    #     return render(request, 'seller/dashseller.html', {'existing_certification': existing_certification,})
-
-    if request.method == 'POST':
-        # Handle form submission
-        certification_image = request.FILES.get('certification_image')
-        owner_name = request.POST.get('owner_name')
     
-        # Perform client-side validation here using JavaScript if needed
-
-        # Perform server-side validation if needed
-        # if not certification_image or not owner_name or not store_name or not expiry_date_from or not expiry_date_to:
-        #     messages.error(request, 'Please fill in all required fields.')
-        # else:
-            # Create and save the Certification instance
-        certification = Certification(
-            user=request.user,
-            certification_image=certification_image,
-            owner_name=owner_name,
-        )
-        certification.save()
-
-
-    context = {'product_count':product_count,
-               }
+    context = {'product_count':product_count}
 
     return render(request,'community/community_dashboard.html',context)
 
@@ -319,6 +291,7 @@ def register(request):
         mobile = request.POST['mobile']
         password = request.POST['password']
         confirm_password = request.POST['confirmPassword']
+        certification_image = request.POST['certification_image']
         user_role = request.POST.get('user_role', 'customer')
 
         if password == confirm_password:
@@ -334,6 +307,7 @@ def register(request):
                         name=name,
                         email=username, 
                         mobile=mobile,
+                        certification_image=certification_image,
                         is_approval=False  # Wait for admin approval for staff
                     )
                    
@@ -815,39 +789,17 @@ def viewproducts(request):
     }
     return render(request, 'admin/admin_view_product.html', context)
 
-@login_required
-def dashlegal(request):
-    # Retrieve Certification objects including their IDs
-    seller_applications = Certification.objects.all()
-    today = timezone.now().date()
-
-    # Retrieve User roles for each Certification applicant
-    user_roles = {}
-    for application in seller_applications:
-        # Ensure the user associated with the Certification exists
-        user = get_object_or_404(User, id=application.user_id)
-
-        # Retrieve user roles
-        user_roles[application.id] = {
-            'is_admin': user.is_superuser,
-            'is_customer': user,
-            'is_community': user.is_staff
-        }
-
-    context = {
-        'seller_applications': seller_applications,
-        'user_roles': user_roles,  # Include user roles in the context
-        'today': today,
-    }
-    return render(request, 'admin/dashlegal.html', context)
-
-
-@login_required
-
-def approve_certification(request, certification_id):
-    certification = get_object_or_404(Certification, id=certification_id)
+def approve_certification(request, product_id):
+    certification = get_object_or_404(Product, id=product_id)
     if request.method == 'POST':
-        certification.is_approved = Certification.APPROVED  # Set it to 'approved'
+        certification.community_is_approved = Product.APPROVED  # Set it to 'approved'
         certification.save()
-    return redirect('dashlegal')
+    return redirect('viewproducts')
+
+def reject_certification(request, product_id):
+    certification = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        certification.community_is_approved = Product.APPROVED  # Set it to 'approved'
+        certification.save()
+    return redirect('viewproducts')
 

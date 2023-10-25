@@ -118,30 +118,21 @@
         <table class="user-table">
             <thead>
                 <tr>
-                    <th>No</th>
+                
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone Number</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for user in users %}
-                    {% if not user.is_superuser %}
+                    {% if not user.is_superuser and not user.is_staff %}
                     <tr>
-                        <td>{{ forloop.counter }}</td>
+                        
                         <td>{{ user.userprofile.name }}</td>
                         <td>{{ user.username }}</td>
                         <td>{{ user.userprofile.mobile}}</td>
                         <td>
-                            <form method="post" action="{% url 'block_user' user.id %}">
-                                {% csrf_token %}
-                                {% if user.is_blocked %}
-                                    <button type="submit" class="action-button unblock-button">Unblock</button>
-                                {% else %}
-                                    <button type="submit" class="action-button block-button">Block</button>
-                                {% endif %}
-                            </form>
                         </td>
                     </tr>
                     {% endif %}

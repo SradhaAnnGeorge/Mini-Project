@@ -238,8 +238,9 @@ tr:hover {
               <table class="table table-bordered" style="margin-left:30%; margin-top:-300px; margin-right:50px;">
       <thead>
           <tr>
-              <th >Username</th>
+              <th >Name</th>
               <th>Email</th>
+              <th>Product Image</th>
               <th>Status</th>
               <th>Actions</th>
           </tr>
@@ -248,8 +249,9 @@ tr:hover {
           {% for commuser in commusers %}
           {% if not user.user.is_superuser %}
           <tr>
-              <td>{{ commuser.user.username }}</td>
+              <td>{{ commuser.user.communityprofile.name }}</td>
               <td>{{ commuser.user.email }}</td>
+              <td><img src="{{ commuser.user.communityprofile.certification_image.url }}" alt="Profile Pic" height="40px" width="70px" /></td>
               <td>
                   {% if commuser.is_approval %}
                   <span class="badge badge-success">Approved</span>
