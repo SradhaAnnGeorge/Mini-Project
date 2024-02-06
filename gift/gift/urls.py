@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
-from giftapp.views import index, register, cart,about, viewproducts,detail, contact, userprofile,communityprofile, login_page,register,approve_certification,loggout,admin_dashboard, admin_addcategory, admin_category, community_dashboard, community_addproduct, community_product,edit_profile, community_edit_profile,admin_delete_category, admin_edit_category, community_edit_product,paymenthandler,payment,admin_view_booking
+from giftapp.views import index, register, cart,about,ProductDetailView, viewproducts,detail,get_quiz, contact, userprofile,communityprofile,login_page,register,approve_certification,loggout,admin_dashboard, admin_addcategory, admin_category, community_dashboard, community_addproduct, community_product,edit_profile, community_edit_profile,admin_delete_category, admin_edit_category, community_edit_product,paymenthandler,payment,admin_view_booking,GeneratePDF
 from django.conf.urls.static import static
 from django.urls import path
 from giftapp import views
+
 # from giftapp.views import view_orders
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +29,7 @@ urlpatterns = [
     # path('loginn', loginn, name='loginn'),
     # path('register', register, name='register'),
     path('cart',cart, name='cart'),
+    path('order_history/', views.order_history, name='order_history'),
     path('about',about, name='about'),
     path('contact',contact, name='contact'),
     path('detail',detail,name='detail'),
@@ -44,7 +46,8 @@ urlpatterns = [
     path('admin_edit_category/<int:category_id>/', views.admin_edit_category, name='admin_edit_category'),
     path('community_product/<int:product_id>/', views.community_product, name='community_product'),
     path('community_product', views.community_product, name='community_product'),
-    path('cart/', views.cart_view, name='cart_view'),
+    
+    # path('cart/', views.cart_view, name='cart_view'),
     path('community_product', views.community_product, name='community_product'),
     path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
     # path('view-orders/', view_orders, name='view_orders'),
@@ -55,12 +58,13 @@ urlpatterns = [
     path('products_list/<int:category_id>/',views.products_list,name='products_list'),
     path('search_product', views.search_product, name='search_product'),
     path('admin_category/',admin_category,name='admin_category'),
-
+    path('api/get-quiz/', get_quiz, name="get_quiz"),
     path('admin_view_booking/',admin_view_booking,name='admin_view_booking'),
-
+    path('product/<int:product_id>/', ProductDetailView.as_view(), name='product_detail'),
     path('login_page',login_page,name='login_page'),
     path('loggout',loggout,name='loggout'),
     path('register',register,name='register'),
+    # path('quiz', quiz,name='quiz'),
     path('block_user/<int:user_id>/', views.block_user, name='block_user'),
     path("",include("allauth.urls")),
     path('community/add_products/', views.community_addproduct, name='community_add_products'),
@@ -75,7 +79,9 @@ urlpatterns = [
     path('paymenthandler/<int:billing_id>/', paymenthandler, name='paymenthandler'),
     path('approve_certification/<int:product_id>/', approve_certification, name='approve_certification'),
     path('viewproducts',viewproducts,name='viewproducts'),
-   
+    path('generate_pdf/<int:billing_id>/', GeneratePDF.as_view(), name='generate_pdf'),
+    path('submit-review/<int:billing_id>/', views.submit_review, name='submit_review'),
+    path('product_details/<int:product_id>/', views.product_details, name='product_details'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

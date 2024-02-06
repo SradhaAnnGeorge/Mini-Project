@@ -1,3 +1,33 @@
+{% extends 'product.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-6">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid">
+      </div>
+      <div class="col-md-6">
+        <h2 class="mb-3">{{ product.name }}</h2>
+        <p class="mb-3">{{ product.description }}</p>
+        <p class="text-danger fw-bold fs-4">${{ product.price }}</p>
+        <!-- Add to Cart Form (similar to your existing code) -->
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="product_id" value="{{ product.id }}">
+          <input type="hidden" name="product_name" value="{{ product.name }}">
+          <input type="hidden" name="product_price" value="{{ product.price }}">
+          <input type="number" name="quantity" value="1" min="1">
+          <button type="submit" class="btn mb-2 fw-bold w-100 btn-outline-danger">Add to Cart</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
+
+
+
 {% comment %} {% load static %}
 
 <!DOCTYPE html>

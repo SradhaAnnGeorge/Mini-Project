@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Details</title>
     <style>
-        /* Reset some default styles */
+        
         body, h1, form {
             margin: 0;
             padding: 0;
@@ -63,18 +63,18 @@
         }
         .container {
   position: relative;
-  padding: 20px; /* Add padding around the container as needed */
+  padding: 20px; 
 }
 
 .cart-link-box {
   position: absolute;
   top: 10px;
   left: 10px;
-  background-color: black; /* Background color for the box */
-  color: white; /* Text color */
-  padding: 10px 20px; /* Padding inside the box */
-  border: 1px solid #333; /* Border for the box */
-  border-radius: 5px; /* Rounded corners */
+  background-color: black; 
+  color: white; 
+  padding: 10px 20px; 
+  border: 1px solid #333; 
+  border-radius: 5px; 
 }
 
 
@@ -88,7 +88,7 @@
        <h1>Payment Details</h1>
     <form action="{% url 'billing' user_id=request.user.id %}" method="POST">
     {% csrf_token %}
-        <!-- Billing Information -->
+       
         <h2>Billing Address</h2>
         <label for="billing_name">Name:</label>
         <input type="text" id="billing_name" name="name" placeholder=" Name" value="{{ user.userprofile.name }}" required>
@@ -106,12 +106,14 @@
         <input type="text" id="billing_zip" name="zip_code" placeholder=" ZIP Code" value="" required>
         <br>
 
-        <!-- Amount -->
+       
         <h2>Amount</h2>
-        <!-- Show the amount here (e.g., dynamically from your server-side code) -->
-        <p>{{ total_price }}</p>
 
-        <!-- Submit Button -->
+        <p>{{ total_price }}</p>
+        
+
+
+
         <button type="submit">Submit Payment</button>
     </form>
 </body>

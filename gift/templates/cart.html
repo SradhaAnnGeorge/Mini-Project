@@ -84,14 +84,13 @@
     </style>
 </head>
 <body>
-<!-- cart.html -->
+
 <a href="{% url 'index' %}">Continue Shopping</a>
 <div class="cart-container">
     <h1>Cart</h1>
     <ul>
         {% if cart_items %}
             {% for item in cart_items %}
-                {% if item.status == 1 %}
             <li>
                 <div>
                     <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="width:185px;height:125px;">
@@ -110,7 +109,6 @@
                     <a href="{% url 'remove_from_cart' item.product.id %}">Remove</a>
                 </div>
             </li>
-            {% endif %}
             {% endfor %}
         {% else %}
             <li>
@@ -121,27 +119,25 @@
     <div id="total-price">Total Price: ${{ total_price }}</div>
     <a href="{% url 'billing' user_id=request.user.id %}">Checkout</a>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+   <script>
+    var totalPrice = {{ total_price }};
+    var csrfToken = '{{ csrf_token }}';
 
-    <script>
-
-    var totalPrice = {{ total_price }}; 
-
-    function incrementQuantity(productId, price) {
-        var quantityElement = document.getElementById('quantity_' + productId);
+    function incrementQuantity(itemId, price) {
+        var quantityElement = document.getElementById('quantity_' + itemId);
         var currentQuantity = parseInt(quantityElement.textContent);
         currentQuantity++;
-        quantityElement.textContent = currentQuantity;
-        updateTotalPrice(price);
+        updateCartItem(itemId, currentQuantity, price);
     }
 
-    function decrementQuantity(productId, price) {
-        var quantityElement = document.getElementById('quantity_' + productId);
+    function decrementQuantity(itemId, price) {
+        var quantityElement = document.getElementById('quantity_' + itemId);
         var currentQuantity = parseInt(quantityElement.textContent);
         if (currentQuantity > 1) {
             currentQuantity--;
-            quantityElement.textContent = currentQuantity;
-            updateTotalPrice(-price); 
+            updateCartItem(itemId, currentQuantity, -price);
         }
     }
 
@@ -150,20 +146,49 @@
         var totalElement = document.getElementById('total-price');
         totalElement.textContent = 'Total Price: $' + totalPrice.toFixed(2);
     }
-    
+
     function remove_from_cart(productId, price) {
         var quantityElement = document.getElementById('quantity_' + productId);
         var currentQuantity = parseInt(quantityElement.textContent);
         var listItem = quantityElement.parentElement.parentElement;
         listItem.remove();
         updateTotalPrice(-price * currentQuantity);
-        
+
         var cartList = document.querySelector('ul');
         if (cartList.children.length === 0) {
             cartList.innerHTML = '<li><p>Your cart is empty.</p></li>';
         }
     }
+
+    function updateCartItem(itemId, newQuantity, priceChange) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'cart' %}",
+            data: {
+                'item_id': itemId,
+                'quantity': newQuantity
+            },
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            success: function (data) {
+                if (data.success) {
+                    // Update the total price on the frontend
+                    updateTotalPrice(priceChange);
+                    // Update the displayed quantity
+                    $('#quantity_' + itemId).text(newQuantity);
+                } else {
+                    // Handle error if needed
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                // Handle error if needed
+            }
+        });
+    }
 </script>
+
+
 
 </body>
 </html>

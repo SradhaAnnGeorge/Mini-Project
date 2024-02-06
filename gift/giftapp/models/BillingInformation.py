@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .product import Product
 
 class BillingInformation(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     address = models.TextField()
     town = models.CharField(max_length=50)

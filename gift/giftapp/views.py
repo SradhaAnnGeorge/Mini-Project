@@ -1,5 +1,7 @@
 from django.db import IntegrityError
 from django.shortcuts import render,redirect,get_object_or_404
+from . models import *
+import random
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
@@ -7,7 +9,9 @@ from django.urls import reverse
 from .models import Product, Category,Userprofile, Communityprofile, Cart, CartItem,BillingInformation
 
 def index(request):
-    return render(request,'index.html')
+    categories = Category.objects.all()  
+
+    return render(request,'index.html',{'categories':categories})
 
 def admin_base(request):
     return render(request,'admin/admin_base.html')
@@ -17,6 +21,7 @@ def contact(request):
     return render(request,'contact.html')
 def detail(request):
     return render(request,'detail.html')
+    
 
 def admin_dashboard(request):
     print('got')
@@ -291,7 +296,7 @@ def register(request):
         mobile = request.POST['mobile']
         password = request.POST['password']
         confirm_password = request.POST['confirmPassword']
-        certification_image = request.POST['certification_image']
+        certification_image = request.FILES.get('certification_image')
         user_role = request.POST.get('user_role', 'customer')
 
         if password == confirm_password:
@@ -335,14 +340,19 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Cart, Product
 
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Category, CartItem, Cart
-from django.contrib.auth.decorators import login_required
+# views.py
 
-@login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Product, Category, Cart, CartItem, Review
+from django.db.models import Avg
+
 def products_list(request, category_id):
     category = get_object_or_404(Category, id=category_id)
     products = Product.objects.filter(category=category)
+    
+    for product in products:
+        average_rating = Review.objects.filter(product=product).aggregate(Avg('rating'))['rating__avg']
+        product.average_rating = round(average_rating, 2) if average_rating else 0
     
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
@@ -358,6 +368,15 @@ def products_list(request, category_id):
         return redirect('cart') 
     
     return render(request, 'product_list.html', {'category': category, 'products': products})
+
+def product_details(request, product_id):
+    # Retrieve the product object
+    product = get_object_or_404(Product, pk=product_id)
+    
+    # Retrieve reviews associated with the product
+    reviews = Review.objects.filter(product=product)
+    
+    return render(request, 'product_details.html', {'product': product, 'reviews': reviews})
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
@@ -381,11 +400,31 @@ def add_to_cart(request, product_id):
     request.session.modified = True
     return redirect('cart')  
 
+from django.shortcuts import render
+from django.http import JsonResponse
+from .models import CartItem
+
 def cart(request):
-    cart_items = CartItem.objects.filter(user=request.user) 
+    cart_items = CartItem.objects.filter(user=request.user)
+    
     total_price = sum(item.product.price * item.quantity for item in cart_items)
 
+    if request.method == 'POST':
+        item_id = request.POST.get('item_id')
+        new_quantity = int(request.POST.get('quantity'))
+
+        # Update quantity in the database
+        cart_item = CartItem.objects.get(id=item_id)
+        cart_item.quantity = new_quantity
+        cart_item.save()
+
+        # Recalculate total price
+        total_price = sum(item.product.price * item.quantity for item in cart_items)
+
+        return JsonResponse({'success': True, 'total_price': total_price})
+    print(cart_items)
     return render(request, 'cart.html', {'cart_items': cart_items, 'total_price': total_price})
+
 
 
 from django.shortcuts import render
@@ -394,7 +433,7 @@ from .models import CartItem
 def cart_view(request):
     user = request.user
     cart_items = CartItem.objects.filter(user=user)
-    total_price = sum(item.total_price() for item in cart_items)
+    total_price = sum(item.product.price * item.quantity for item in cart_items)
 
     context = {
         'cart_items': cart_items,
@@ -609,34 +648,22 @@ def billing(request, user_id):
     cart_items = CartItem.objects.filter(user=user)
     total_price = sum(item.total_price() for item in cart_items)
 
-    try:
-        billing_info = BillingInformation.objects.get(user=user)
-    except BillingInformation.DoesNotExist:
-        billing_info = None
-
     if request.method == 'POST':
         address = request.POST.get('address')
         town = request.POST.get('town')
         zip_code = request.POST.get('zip_code')
         name = request.POST.get('name')
 
-        if billing_info:
-            billing_info.address = address
-            billing_info.town = town
-            billing_info.zip_code = zip_code
-            billing_info.name = name
-            billing_info.amount = total_price
-            billing_info.save()
-        else:
-            billing_info = BillingInformation(
-                user=user,
-                address=address,
-                town=town,
-                zip_code=zip_code,
-                name=name,
-                amount=total_price
-            )
-            billing_info.save()
+        billing_info = BillingInformation(
+            user=user,
+            address=address,
+            town=town,
+            zip_code=zip_code,
+            name=name,  
+            amount=total_price
+        )
+        billing_info.save()
+        
 
         # Save the products from the cart to billing_info
         product_ids = [item.product.id for item in cart_items]
@@ -648,7 +675,6 @@ def billing(request, user_id):
     context = {
         'cart_items': cart_items,
         'total_price': total_price,
-        'billing_info': billing_info,
     }
 
     return render(request, 'billing.html', context)
@@ -729,7 +755,7 @@ def paymenthandler(request, billing_id):
         payment.payment_status = Payment.PaymentStatusChoices.SUCCESSFUL
         payment.save()
 
-        cart_items.update(status=0)
+        cart_items.delete()
 
         # Mark the cart items as inactive (status = 0)
         billing = BillingInformation.objects.get(id=billing_id)
@@ -757,6 +783,15 @@ def admin_view_booking(request):
     context = {'billing_information_list': billing_information_list}
     return render(request, 'admin/admin_view_booking.html', context)
 
+@login_required
+def order_history(request):
+    # Retrieve all successfully ordered products for the current user
+    successful_orders = BillingInformation.objects.filter(
+        user=request.user,
+        payment_status=True
+    )
+
+    return render(request, 'order_history.html', {'successful_orders': successful_orders})
 
 def block_user(request, user_id):
     user = User.objects.get(pk=user_id)
@@ -803,3 +838,140 @@ def reject_certification(request, product_id):
         certification.save()
     return redirect('viewproducts')
 
+
+def get_quiz(request):
+    try:
+        question_objs = list(Question.objects.all())
+        data = []
+        random.shuffle((question_objs))
+
+        print(question_objs)
+
+        for question_obj in question_objs:
+            data.append({
+                "category" : question_obj.category.category_name,
+                "question" : question_obj.question,
+                "mark" : question_obj.marks,
+                "answers" : question_obj.get_answers()
+            })
+        payload = {'status' : True, 'data' : data }
+
+        return JsonResponse(payload)
+
+
+    except Exception as e:
+        print(e)
+    return HttpResponse("Something went wrong")
+
+
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from .models import Product
+
+class ProductDetailView(View):
+    template_name = 'product_detail.html'
+
+    def get(self, request, product_id):
+        product = get_object_or_404(Product, id=product_id)
+        return render(request, self.template_name, {'product': product})
+    
+
+# views.py
+from django.http import HttpResponse
+from django.views import View
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from .models import BillingInformation
+from io import BytesIO
+from PIL import Image
+
+class GeneratePDF(View):
+    def get(self, request, billing_id):
+        try:
+            # Retrieve billing information based on billing_id
+            billing_info = BillingInformation.objects.get(id=billing_id)
+
+            # Create a response object with PDF content
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="order_{billing_id}.pdf"'
+
+            # Create PDF content using the canvas module
+            p = canvas.Canvas(response, pagesize=letter)
+
+            # Set font and font size
+            p.setFont("Helvetica-Bold", 16)
+
+            # Header
+            p.setFillColorRGB(0, 0, 0.5)
+            p.drawString(100, 750, 'Order Details')
+            p.line(100, 740, 500, 740)  # Underline header
+
+            # Billing Information
+            y_position = 720
+            p.setFillColor(colors.black)
+            p.setFont("Helvetica", 12)
+            p.drawString(100, y_position, f'Name: {billing_info.name}')
+            y_position -= 20
+            p.drawString(100, y_position, f'Address: {billing_info.address}')
+            y_position -= 20
+            p.drawString(100, y_position, f'Town: {billing_info.town}')
+            y_position -= 20
+            p.drawString(100, y_position, f'Zip Code: {billing_info.zip_code}')
+            y_position -= 20
+            p.drawString(100, y_position, f'Amount: ${billing_info.amount:.2f}')
+            y_position -= 20
+
+            # Product Details
+            p.setFillColorRGB(0, 0.5, 0)
+            p.drawString(100, y_position, 'Products:')
+            y_position -= 20
+            for product in billing_info.product.all():
+                p.drawString(120, y_position, f'- {product.name}')
+                y_position -= 20
+
+            # Separator Line
+            p.line(100, y_position - 10, 500, y_position - 10)
+            y_position -= 20
+
+            # Footer
+            p.setFillColorRGB(0.2, 0.2, 0.2)
+            p.setFont("Helvetica-Oblique", 12)
+            p.drawString(100, y_position, 'Thank you for choosing our services!')
+            p.drawString(100, y_position - 20, 'For any inquiries, please contact CraftedEuphoria.com')
+
+            p.showPage()
+            p.save()
+
+            return response
+
+        except BillingInformation.DoesNotExist:
+            return HttpResponse('Billing information not found', status=404)
+        
+
+# views.py
+
+# views.py
+
+from django.shortcuts import render, redirect
+from .models import Review, BillingInformation
+
+def submit_review(request, billing_id):
+    if request.method == 'POST':
+        # Assuming you have a form to collect review and rating data
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+
+        # Get the billing object associated with the billing_id
+        billing = BillingInformation.objects.get(id=billing_id)
+
+        # Get the product associated with the billing
+        product = billing.product.first()  # Get the first product (assuming there's only one)
+
+        # Save the review to the Review model
+        review = Review.objects.create(product=product, rating=rating, comment=comment)
+
+        # Redirect to a success page or wherever you want
+        return redirect('order_history')
+    else:
+        return render(request, 'review.html')

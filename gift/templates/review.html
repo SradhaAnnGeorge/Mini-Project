@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Review</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .review-container {
+            text-align: center;
+            margin: 0 auto;
+            width: 50%;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .review-container h1 {
+            margin-bottom: 20px;
+        }
+
+        .rating-container {
+            margin-bottom: 20px;
+        }
+
+        #rating {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        #rating::placeholder {
+            color: #999;
+        }
+
+        #rating:focus {
+            border-color: #007bff;
+        }
+
+        #review {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            resize: vertical;
+            outline: none;
+        }
+
+        #review::placeholder {
+            color: #999;
+        }
+
+        #review:focus {
+            border-color: #007bff;
+        }
+
+        .submit-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="review-container">
+        <h1>Submit Review</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="rating-container">
+                <label for="rating">Rating:</label>
+                <input type="number" name="rating" id="rating" placeholder="Enter your rating (1-5)" min="1" max="5" required>
+            </div>
+            <div class="comment-container">
+                <label for="review">Review:</label>
+                <textarea id="review" name="comment" placeholder="Enter your review..." rows="4" required></textarea>
+            </div>
+            <button type="submit" class="submit-button">Submit Review</button>
+        </form>
+    </div>
+</body>
+</html>

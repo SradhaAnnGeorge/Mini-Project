@@ -37,7 +37,7 @@
           {% for messages in messages %}
             <h3 style="color: red">{{ messages }}</h3>
             {% endfor %}
-          <form method="post" action="#" id="registrationForm">
+          <form method="post" action="#" id="registrationForm" enctype="multipart/form-data">
             {% csrf_token %}
             
             <div class="form-group">

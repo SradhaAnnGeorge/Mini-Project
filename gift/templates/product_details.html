@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} Detail</title>
+</head>
+<body>
+    <h1>{{ product.name }} Detail</h1>
+    
+    <div>
+        <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}" style="height:250px;width:250px;">
+    </div>
+    
+    <div>
+        <p>Description: {{ product.description }}</p>
+        <p>Price: ${{ product.price }}</p>
+    </div>
+    
+    <h2>Reviews</h2>
+    <ul>
+        {% for review in reviews %}
+            <li>{{ review.rating }} - {{ review.comment }}</li>
+        {% empty %}
+            <li>No reviews yet.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

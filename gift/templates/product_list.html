@@ -39,6 +39,7 @@
                                     {% if user.is_authenticated %}
                                     <li class="p-2"><a target="_blank" href="{% url 'loggout' %}"><button class="btn px-4 btn-danger">Logout</button></a></li>
                                     <li class="p-2"><a target="_blank" href="{% url 'userprofile' %}"><button class="btn px-4 btn-danger">User Profile</button></a></li>
+                                    <li class="p-2"><a target="_blank" href="{% url 'order_history' %}"><button class="btn px-4 btn-danger">History</button></a></li>
 
                                     {% else %}
                                     <li class="p-2"><a target="_blank" href="{% url 'login_page' %}"><button class="btn px-4 btn-danger">Login</button></a></li>
@@ -73,6 +74,7 @@
         </form>
     </div>
 </div>
+
 <script>
     function toggleSearchButton() {
         const productNameInput = document.getElementById("productname");
@@ -92,9 +94,9 @@
                                         <i class="bi fs-4 bi-basket"></i>
                                     </button>
                                 </a>
-                                <button type="button" class="btn d-none d-md-inline-block ms-3 btn-light shadow-md border position-relative">
+                                {% comment %} <button type="button" class="btn d-none d-md-inline-block ms-3 btn-light shadow-md border position-relative">
                                     <i class="bi fs-4 bi-heart"></i>
-                                </button>
+                                </button> {% endcomment %}
                             </div>
                         </div>
                     </div>
@@ -105,22 +107,6 @@
                                 <a class="text-white" data-bs-target="#menu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="menu"><i class="bi cp bi-list float-end fs-1 dmji"></i></a>
                             </h6>
                             <ul id="menu" class="navcol fw-bold d-none d-md-inline-flex">
-                                <!-- <li class="p-21 px-4">
-                                    <a class="text-white" href="">Products<i class="bi pt-2 bi-chevron-down"></i></a>
-                                    <div class="inner-div">
-                                        <ul class="">
-                                            <li><a href="">Toys</a></li>
-                                            <li><a href="">Craft Works</a></li>
-                                            <li><a href="">Gifts Cards</a></li>
-                                            <li><a href="">Paintings</a></li>
-                                            <li><a href="">Gift Baskets & Hampers</a></li>
-                                            <li><a href="">Chocolates</a></li>
-                                            <li><a href="">Stationery</a></li>
-                                            <li><a href="">Fashion Accessories</a></li>
-                                            <li><a href="">Personalized Gifts</a></li>
-                                        </ul>
-                                    </div>
-                                </li> -->
                                 <li class="p-21 px-4">
                                     <a class="text-white" href="">Categories<i class="bi pt-2 bi-chevron-down"></i></a>
                                     <div class="inner-div">
@@ -136,6 +122,7 @@
                                 </li>
                                 <li class="p-21 px-4 active"><a class="text-white" href="{% url 'index' %}">Home </a></li>
                                 <li class="p-21 px-4"><a class="text-white" href="{% url 'about' %}">About Us </a></li>
+                                
                             </ul>
                         </div>
                     </div>
@@ -146,14 +133,18 @@
         <div class="col-lg-3 col-md-4 mb-4">
             <div class="product-box bg-white p-2 shadow-md">
                 <div class="text-center">
-                    <a href="">
-                        <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}"   >
+                    <a href="{% url 'product_details' product.id %}">
+                         <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}">
                     </a>
+
                 </div>
                 <div class="detail p-2">
                     <h4 class="mb-1 fs-5 fw-bold">{{ product.name }}</h4>
                     <h4 class="mb-1 fs-5">{{ product.description }}</h4>
                     <b class="fs-4 text-danger">${{ product.price }}</b>
+                    <h5 class="mb-1">{{ product.average_rating }}/5 rating</h5>
+                
+             
                     
                     <ul class="mt-0 vgth">
                         <li class="fs-8">

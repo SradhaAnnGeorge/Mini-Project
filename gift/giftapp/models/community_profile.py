@@ -15,6 +15,7 @@ class Communityprofile(models.Model):
     name = models.CharField(max_length=100)
     email = models.CharField(max_length=100,null=True)
     mobile = models.CharField(max_length=15)
+    
     address = models.TextField(blank=True, null=True)
     profile_pic = models.ImageField(upload_to='profile_pics/', blank=True, null=True) 
     certification_image = models.ImageField(upload_to='certification_image/', null=True, blank=True)

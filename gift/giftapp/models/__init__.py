@@ -7,3 +7,4 @@ from .cart_item import CartItem
 from .BillingInformation import BillingInformation
 from .payment import Payment
 from .register import Register
+from .review import Review
